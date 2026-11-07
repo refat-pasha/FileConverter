@@ -84,3 +84,7 @@ Office-call timeout (default 120 s) can be overridden with the environment varia
   workspace (e.g. `%TEMP%`) and convert there — verified working end-to-end 2026-11-07.
 - A watchdog-killed Word instance can poison the next run (exit 1, no output, stray
   WINWORD.EXE). Kill stray WINWORD/EXCEL first, then retry; the same input converts fine.
+- PDF → DOCX relies on Word's own PDF-import filter; on 2026-11-07 it intermittently hung
+  even in direct Word COM calls (plain .docx opened fine) after a WINWORD crash + pending
+  Office update — Office-side transient, not app state. If it wedges repeatedly:
+  Windows Settings → Apps → Microsoft Office → Modify → **Quick Repair**, then retry.
