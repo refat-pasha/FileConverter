@@ -1,0 +1,327 @@
+<Window x:Class="FileConverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:FileConverter.Models"
+        Title="File Converter"
+        Icon="pack://application:,,,/assets/app.ico"
+        Width="860" Height="620" MinWidth="720" MinHeight="520"
+        WindowStartupLocation="CenterScreen"
+        Background="#17181C"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="BgBrush" Color="#17181C"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#1F2127"/>
+        <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#282B33"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#33363F"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#E8EAED"/>
+        <SolidColorBrush x:Key="SubTextBrush" Color="#9AA0A8"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#6C8CFF"/>
+        <SolidColorBrush x:Key="AccentHoverBrush" Color="#8199FF"/>
+        <SolidColorBrush x:Key="GreenBrush" Color="#4CC38A"/>
+        <SolidColorBrush x:Key="RedBrush" Color="#F06C7C"/>
+
+        <Style x:Key="BaseBtn" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{StaticResource SurfaceHoverBrush}"/>
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#4A4E5A"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimaryBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{StaticResource AccentHoverBrush}"/>
+                                <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource AccentHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DarkCombo" TargetType="ComboBox">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                        <Setter Property="Background" Value="#22242A"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DarkCheck" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20,16,20,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,14" Orientation="Horizontal">
+            <TextBlock Text="File Converter" FontSize="20" FontWeight="SemiBold"
+                       Foreground="{StaticResource TextBrush}"/>
+            <TextBlock Text="  ·  Office · PDF · images" FontSize="12.5"
+                       Foreground="{StaticResource SubTextBrush}" VerticalAlignment="Bottom" Margin="0,0,0,3"/>
+        </StackPanel>
+
+        <!-- Drop zone -->
+        <Grid Grid.Row="1" Height="104" Margin="0,0,0,12">
+            <Border x:Name="DropZone" Background="#1D1F26" CornerRadius="10"
+                    MouseLeftButtonUp="OnDropZoneClick"
+                    AllowDrop="True" Drop="OnDropZoneDrop" DragOver="OnDropZoneDragOver" DragLeave="OnDropZoneDragLeave"
+                    Cursor="Hand">
+                <Grid>
+                    <Rectangle x:Name="DropOutline" Margin="1" RadiusX="9" RadiusY="9"
+                               Stroke="#3A3D46" StrokeThickness="1.5" StrokeDashArray="4 4" Fill="Transparent"/>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Drop files here" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center"
+                                   Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="or click to browse  ·  PDF, Word, Excel, PowerPoint, images" FontSize="12"
+                                   HorizontalAlignment="Center" Margin="0,5,0,0"
+                                   Foreground="{StaticResource SubTextBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Toolbar -->
+        <Grid Grid.Row="2" Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                <CheckBox x:Name="SameFolderCheck" Style="{StaticResource DarkCheck}"
+                          Content="Save next to source files" IsChecked="True"
+                          Checked="OnSameFolderChanged" Unchecked="OnSameFolderChanged"/>
+                <TextBox x:Name="OutputFolderBox" Width="330" Margin="12,0,0,0" Height="30"
+                         VerticalContentAlignment="Center" FontSize="12"
+                         Background="{StaticResource SurfaceBrush}" Foreground="{StaticResource TextBrush}"
+                         BorderBrush="{StaticResource BorderBrush}" Padding="6,0"
+                         ToolTip="Output folder (used when 'Save next to source files' is off)"/>
+                <Button Style="{StaticResource BaseBtn}" Content="Browse…" Margin="8,0,0,0" Click="OnBrowseFolder"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Button x:Name="ConvertAllBtn" Style="{StaticResource PrimaryBtn}" Content="Convert all"
+                        MinWidth="120" Click="OnConvertAll"/>
+                <Button x:Name="ClearBtn" Style="{StaticResource BaseBtn}" Content="Clear" Margin="8,0,0,0" Click="OnClear"/>
+                <Rectangle Width="1" Fill="{StaticResource BorderBrush}" Margin="14,2"/>
+                <Button x:Name="MergeBtn" Style="{StaticResource BaseBtn}" Content="Merge PDFs" Click="OnMerge"
+                        ToolTip="Merge 2 or more PDFs from the list into one file"/>
+                <Button x:Name="SplitBtn" Style="{StaticResource BaseBtn}" Content="Split…" Margin="8,0,0,0" Click="OnSplit"
+                        ToolTip="Extract a page range from the selected PDF"/>
+                <Button x:Name="OptimizeBtn" Style="{StaticResource BaseBtn}" Content="Optimize PDFs" Margin="8,0,0,0" Click="OnOptimize"
+                        ToolTip="Rebuild PDFs to shrink them (modest savings — heavy compression needs Ghostscript)"/>
+                <Button x:Name="OpenFolderBtn" Style="{StaticResource BaseBtn}" Content="Open output folder" Margin="8,0,0,0" Click="OnOpenFolder"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Queue -->
+        <Border Grid.Row="3" Background="#1B1D22" CornerRadius="10" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="4">
+            <Grid>
+                <DataGrid x:Name="JobsList"
+                      Background="Transparent" BorderThickness="0"
+                      RowBackground="Transparent" AlternatingRowBackground="#1E2026"
+                      Foreground="{StaticResource TextBrush}"
+                      HeadersVisibility="None" GridLinesVisibility="None"
+                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                      CanUserReorderColumns="False" CanUserResizeRows="False"
+                      SelectionMode="Extended" SelectionUnit="FullRow"
+                      IsReadOnly="True"
+                      SelectionChanged="OnSelectionChanged"
+                      RowHeight="52">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <ContentPresenter VerticalAlignment="Center"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#24262D"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#282B36"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="*" MinWidth="220">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="8,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding FileName}" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextBrush}" TextTrimming="CharacterEllipsis"
+                                               ToolTip="{Binding SourcePath}"/>
+                                    <TextBlock Text="{Binding SourcePath}" FontSize="10.5" Margin="0,2,0,0"
+                                               Foreground="{StaticResource SubTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Width="112">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Style="{StaticResource DarkCombo}"
+                                          ItemsSource="{Binding AvailableTargets}"
+                                          SelectedItem="{Binding TargetFormat, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Width="260">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="4,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding StatusText}" FontSize="12" FontWeight="SemiBold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{StaticResource SubTextBrush}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static models:JobStatus.Running}">
+                                                        <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static models:JobStatus.Done}">
+                                                        <Setter Property="Foreground" Value="{StaticResource GreenBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static models:JobStatus.Failed}">
+                                                        <Setter Property="Foreground" Value="{StaticResource RedBrush}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding Detail}" FontSize="10.5" Margin="0,2,0,0"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{StaticResource SubTextBrush}"
+                                               ToolTip="{Binding Detail}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Width="44">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="✕" FontSize="12" Click="OnRemoveRow" Tag="{Binding}"
+                                        Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                        Foreground="{StaticResource SubTextBrush}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Transparent" Padding="8,6">
+                                                <ContentPresenter x:Name="txt" HorizontalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="txt" Property="TextBlock.Foreground" Value="{StaticResource RedBrush}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+                <TextBlock x:Name="EmptyHint" Text="No files yet — drop files above or click to browse"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="{StaticResource SubTextBrush}" FontSize="13" IsHitTestVisible="False"/>
+            </Grid>
+        </Border>
+
+        <!-- Status bar -->
+        <Grid Grid.Row="4" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="StatusText" Grid.Column="0" Text="Add files to get started"
+                       FontSize="12" Foreground="{StaticResource SubTextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+            <ProgressBar x:Name="Progress" Grid.Column="1" Width="200" Height="4" Minimum="0" Maximum="1" Value="0"
+                         Background="#26282F" Foreground="{StaticResource AccentBrush}"
+                         BorderThickness="0" VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>

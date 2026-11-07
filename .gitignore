@@ -1,0 +1,18 @@
+# Build outputs
+bin/
+obj/
+publish/
+
+# Installer build artifacts (MSI is distributed, not committed)
+installer/*.msi
+installer/*.wixpdb
+
+# Test run outputs
+testdata/out/
+
+# Logs
+*.log
+
+# Temp
+*.tmp
+.wpftmp.csproj
