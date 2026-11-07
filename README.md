@@ -75,3 +75,12 @@ Office-call timeout (default 120 s) can be overridden with the environment varia
   install Ghostscript for real compression.
 - Test suite (development): `bash testdata/run-tests.sh` after generating test files with
   `testdata/make-test-files.ps1`.
+
+## Machine notes (DSH sandbox)
+
+- Files inside the DSH workspace carry a Low integrity label and package-scoped grants.
+  Word/Excel cannot open them (`Workbooks.Open` fails / Word hangs until the watchdog
+  fires), and PowerPoint COM may be refused outright. Copy inputs to a folder outside the
+  workspace (e.g. `%TEMP%`) and convert there — verified working end-to-end 2026-11-07.
+- A watchdog-killed Word instance can poison the next run (exit 1, no output, stray
+  WINWORD.EXE). Kill stray WINWORD/EXCEL first, then retry; the same input converts fine.
